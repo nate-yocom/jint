@@ -42,21 +42,21 @@ namespace Jint {
 
             var global = Visitor.Global as JsObject;
 
-            global["ToBoolean"] = Visitor.Global.FunctionClass.New(new Func<object, Boolean>(Convert.ToBoolean));
-            global["ToByte"] = Visitor.Global.FunctionClass.New(new Func<object, Byte>(Convert.ToByte));
-            global["ToChar"] = Visitor.Global.FunctionClass.New(new Func<object, Char>(Convert.ToChar));
-            global["ToDateTime"] = Visitor.Global.FunctionClass.New(new Func<object, DateTime>(Convert.ToDateTime));
-            global["ToDecimal"] = Visitor.Global.FunctionClass.New(new Func<object, Decimal>(Convert.ToDecimal));
-            global["ToDouble"] = Visitor.Global.FunctionClass.New(new Func<object, Double>(Convert.ToDouble));
-            global["ToInt16"] = Visitor.Global.FunctionClass.New(new Func<object, Int16>(Convert.ToInt16));
-            global["ToInt32"] = Visitor.Global.FunctionClass.New(new Func<object, Int32>(Convert.ToInt32));
-            global["ToInt64"] = Visitor.Global.FunctionClass.New(new Func<object, Int64>(Convert.ToInt64));
-            global["ToSByte"] = Visitor.Global.FunctionClass.New(new Func<object, SByte>(Convert.ToSByte));
-            global["ToSingle"] = Visitor.Global.FunctionClass.New(new Func<object, Single>(Convert.ToSingle));
-            global["ToString"] = Visitor.Global.FunctionClass.New(new Func<object, String>(Convert.ToString));
-            global["ToUInt16"] = Visitor.Global.FunctionClass.New(new Func<object, UInt16>(Convert.ToUInt16));
-            global["ToUInt32"] = Visitor.Global.FunctionClass.New(new Func<object, UInt32>(Convert.ToUInt32));
-            global["ToUInt64"] = Visitor.Global.FunctionClass.New(new Func<object, UInt64>(Convert.ToUInt64));
+            global["ToBoolean"] = Visitor.Global.FunctionClass.New(new Delegates.Func<object, Boolean>(Convert.ToBoolean));
+            global["ToByte"] = Visitor.Global.FunctionClass.New(new Delegates.Func<object, Byte>(Convert.ToByte));
+            global["ToChar"] = Visitor.Global.FunctionClass.New(new Delegates.Func<object, Char>(Convert.ToChar));
+            global["ToDateTime"] = Visitor.Global.FunctionClass.New(new Delegates.Func<object, DateTime>(Convert.ToDateTime));
+            global["ToDecimal"] = Visitor.Global.FunctionClass.New(new Delegates.Func<object, Decimal>(Convert.ToDecimal));
+            global["ToDouble"] = Visitor.Global.FunctionClass.New(new Delegates.Func<object, Double>(Convert.ToDouble));
+            global["ToInt16"] = Visitor.Global.FunctionClass.New(new Delegates.Func<object, Int16>(Convert.ToInt16));
+            global["ToInt32"] = Visitor.Global.FunctionClass.New(new Delegates.Func<object, Int32>(Convert.ToInt32));
+            global["ToInt64"] = Visitor.Global.FunctionClass.New(new Delegates.Func<object, Int64>(Convert.ToInt64));
+            global["ToSByte"] = Visitor.Global.FunctionClass.New(new Delegates.Func<object, SByte>(Convert.ToSByte));
+            global["ToSingle"] = Visitor.Global.FunctionClass.New(new Delegates.Func<object, Single>(Convert.ToSingle));
+            global["ToString"] = Visitor.Global.FunctionClass.New(new Delegates.Func<object, String>(Convert.ToString));
+            global["ToUInt16"] = Visitor.Global.FunctionClass.New(new Delegates.Func<object, UInt16>(Convert.ToUInt16));
+            global["ToUInt32"] = Visitor.Global.FunctionClass.New(new Delegates.Func<object, UInt32>(Convert.ToUInt32));
+            global["ToUInt64"] = Visitor.Global.FunctionClass.New(new Delegates.Func<object, UInt64>(Convert.ToUInt64));
 
             BreakPoints = new List<BreakPoint>();
         }

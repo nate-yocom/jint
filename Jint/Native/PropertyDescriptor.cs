@@ -52,12 +52,12 @@ namespace Jint.Native {
     [Serializable]
     public class PropertyDescriptor<T> : PropertyDescriptor
         where T : JsInstance {
-        public PropertyDescriptor(IGlobal global, JsDictionaryObject owner, string name, Func<T, JsInstance> get)
+        public PropertyDescriptor(IGlobal global, JsDictionaryObject owner, string name, Delegates.Func<T, JsInstance> get)
             : base(global, owner, name) {
             GetFunction = global.FunctionClass.New<T>(get);
         }
 
-        public PropertyDescriptor(IGlobal global, JsDictionaryObject owner, string name, Func<T, JsInstance> get, Func<T, JsInstance[], JsInstance> set)
+        public PropertyDescriptor(IGlobal global, JsDictionaryObject owner, string name, Delegates.Func<T, JsInstance> get, Delegates.Func<T, JsInstance[], JsInstance> set)
             : this(global, owner, name, get) {
             SetFunction = global.FunctionClass.New<T>(set);
         }

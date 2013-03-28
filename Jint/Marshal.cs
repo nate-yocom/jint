@@ -221,14 +221,14 @@ namespace Jint
                         Delegate marshller;
                         if (!m_arrayMarshllers.TryGetValue(typeof(T), out marshller))
                             m_arrayMarshllers[typeof(T)] = marshller = Delegate.CreateDelegate(
-                                typeof(Func<JsObject, T>),
+                                typeof(Delegates.Func<JsObject, T>),
                                 this,
                                 typeof(Marshaller)
                                     .GetMethod("MarshalJsFunctionHelper")
                                     .MakeGenericMethod(typeof(T).GetElementType())
                             );
 
-                        return ((Func<JsObject, T>)marshller)(value as JsObject);
+                        return ((Delegates.Func<JsObject, T>)marshller)(value as JsObject);
                     }
                     else
                     {
