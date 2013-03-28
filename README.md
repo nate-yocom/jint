@@ -1,0 +1,1 @@
+# Jint ForkOriginal Jint project is at [codeplex](http://jint.codeplex.com). Forked here to:* Make it build in .NET 4* Add debug[ger|ing] improvements
