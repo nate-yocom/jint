@@ -29,7 +29,7 @@ namespace Jint {
         protected JsInstance returnInstance;
         protected int recursionLevel;
 
-        public event EventHandler<DebugInformation> Step;
+        public System.Func<ExecutionVisitor, DebugInformation, bool> Step;
         public Stack<string> CallStack { get; set; }
         public Statement CurrentStatement { get; set; }
 
@@ -93,10 +93,12 @@ namespace Jint {
             CallStack = new Stack<string>();
         }
 
-        public void OnStep(DebugInformation info) {
+        public bool OnStep(DebugInformation info) {
             if (Step != null && info.CurrentStatement != null && info.CurrentStatement.Source != null) {
-                Step(this, info);
+                return Step(this, info);
             }
+
+            return true;
         }
 
         public DebugInformation CreateDebugInformation(Statement statement) {
@@ -140,8 +142,10 @@ namespace Jint {
                 CurrentStatement = statement;
 
                 if (DebugMode) {
-                    OnStep(CreateDebugInformation(statement));
+                    if (!OnStep(CreateDebugInformation(statement)))
+                        return;   
                 }
+
                 Result = null;
                 statement.Accept(this);
 
@@ -263,8 +267,10 @@ namespace Jint {
 
         public void Visit(CommaOperatorStatement statement) {
             foreach (var s in statement.Statements) {
-                if (DebugMode) {
-                    OnStep(CreateDebugInformation(s));
+                if (DebugMode)
+                {
+                    if (!OnStep(CreateDebugInformation(s)))
+                        return;
                 }
 
                 s.Accept(this);
@@ -280,8 +286,10 @@ namespace Jint {
             foreach (var s in statement.Statements) {
                 CurrentStatement = s;
 
-                if (DebugMode) {
-                    OnStep(CreateDebugInformation(s));
+                if (DebugMode)
+                {
+                    if (!OnStep(CreateDebugInformation(s)))
+                        return;
                 }
 
                 Result = null;

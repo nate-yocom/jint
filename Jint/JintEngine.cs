@@ -207,8 +207,9 @@ namespace Jint {
             Visitor.AllowClr = allowClr;
             Visitor.Result = null;
 
-            if (DebugMode) {
-                Visitor.Step += OnStep;
+            if (DebugMode)
+            {
+                Visitor.Step = OnStep;
             }
 
             try {
@@ -270,8 +271,9 @@ namespace Jint {
         }
 
         #region Debugger
-        public event EventHandler<DebugInformation> Step;
-        public event EventHandler<DebugInformation> Break;
+
+        public System.Func<JintEngine, DebugInformation, bool> Step;
+        public System.Func<JintEngine, DebugInformation, bool> Break;
         public List<BreakPoint> BreakPoints { get; private set; }
         public bool DebugMode { get; private set; }
         public int MaxRecursions { get; private set; }
@@ -401,12 +403,15 @@ namespace Jint {
             return value.Replace("\\", "\\\\").Replace("'", "\\'").Replace(Environment.NewLine, "\\r\\n");
         }
 
-        protected void OnStep(object sender, DebugInformation info) {
+        protected bool OnStep(ExecutionVisitor sender, DebugInformation info)
+        {
+            bool result = true;
+
             if (Step != null) {
-                Step(this, info);
+                result = Step(this, info);
             }
 
-            if (Break != null) {
+            if (Break != null && result) {
                 BreakPoint breakpoint = BreakPoints.Find(l => {
                     bool afterStart, beforeEnd;
 
@@ -431,17 +436,12 @@ namespace Jint {
                     return true;
                 });
 
-
                 if (breakpoint != null) {
-                    Break(this, info);
+                    result = Break(this, info);
                 }
             }
-        }
 
-        protected void OnBreak(object sender, DebugInformation info) {
-            if (Break != null) {
-                Break(this, info);
-            }
+            return result;
         }
 
         public JintEngine DisableSecurity() {

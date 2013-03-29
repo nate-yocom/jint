@@ -16,6 +16,14 @@ namespace Jint.Shell {
 
             jint.SetFunction("print", new Action<object>(s => { Console.ForegroundColor = ConsoleColor.Blue; Console.Write(s); Console.ResetColor(); }));
             jint.SetFunction("import", new Action<string>(s => { Assembly.LoadWithPartialName(s); }));
+            jint.Step =
+                        (sender, information) =>
+                        {
+                            // Console.WriteLine("Step: {0} => {1}", information.CurrentStatement.Source, information.CurrentStatement.Source.Code);
+                            return true;
+                        };
+
+            jint.SetDebugMode(true);
             jint.DisableSecurity();
 
             while (true) {
@@ -49,7 +57,8 @@ namespace Jint.Shell {
 
                 Console.SetError(new StringWriter(new StringBuilder()));
 
-                try {
+                try
+                {                    
                     jint.Run(script.ToString());
                 }
                 catch (Exception e) {
