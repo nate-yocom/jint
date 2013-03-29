@@ -1341,8 +1341,18 @@ namespace Jint {
             if (function != null)
             {
                 #region DebugMode
-                if (DebugMode) {
-                    var stack = function.Name + "(";
+                if (DebugMode)
+                {
+                    string stack = null;
+                    if (methodCall.Source != null && methodCall.Source.Start != null && methodCall.Source.Start.Line != null)
+                    {
+                        stack = methodCall.Source.Start.Line + ": " + function.Name + "(";
+                    }
+                    else
+                    {
+                        stack = function.Name + "(";    
+                    }
+                                        
                     var paramStrings = new string[parameters.Length];
 
                     for (int i = 0; i < parameters.Length; i++) {

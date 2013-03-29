@@ -207,7 +207,7 @@ namespace Jint {
             Visitor.AllowClr = allowClr;
             Visitor.Result = null;
 
-            if (DebugMode)
+            if (DebugMode && Visitor.Step == null)
             {
                 Visitor.Step = OnStep;
             }
@@ -220,7 +220,10 @@ namespace Jint {
                 }
                 Visitor.Visit(program);
             }
-            catch (SecurityException) {
+            catch (SecurityException se)
+            {
+                if (DebugMode && Stop != null)
+                    Stop(this, program, se);
                 throw;
             }
             catch (JsException e) {
@@ -245,7 +248,10 @@ namespace Jint {
                             + Environment.NewLine + Visitor.CurrentStatement.Source.Code;
                 }
 
-                throw new JintException(message + source + stackTrace, e);
+                JintException je = new JintException(message + source + stackTrace, e);
+                if(DebugMode && Stop != null)
+                    Stop(this, program, je);
+                throw je;
             }
             catch (Exception e) {
                 StringBuilder stackTrace = new StringBuilder();
@@ -266,14 +272,16 @@ namespace Jint {
                             + Environment.NewLine + Visitor.CurrentStatement.Source.Code;
                 }
 
-                throw new JintException(e.Message + source + stackTrace, e);
+                JintException je = new JintException(e.Message + source + stackTrace, e);
+                if (DebugMode && Stop != null)
+                    Stop(this, program, je);
+                throw je;
             }
-            finally
-            {
-                Visitor.Step = null;
-            }
-
-            return Visitor.Result == null ? null : unwrap ? Visitor.Global.Marshaller.MarshalJsValue<object>( Visitor.Result) : Visitor.Result;
+            
+            object result = Visitor.Result == null ? null : unwrap ? Visitor.Global.Marshaller.MarshalJsValue<object>( Visitor.Result) : Visitor.Result;
+            if (DebugMode && Stop != null)
+                Stop(this, program, result);
+            return result;
         }
 
         #region Debugger
@@ -281,6 +289,7 @@ namespace Jint {
         public System.Func<JintEngine, DebugInformation, bool> Step;
         public System.Func<JintEngine, DebugInformation, bool> Break;
         protected System.Func<JintEngine, Program, bool> Start;
+        protected System.Action<JintEngine, Program, object> Stop; 
         public List<BreakPoint> BreakPoints { get; private set; }
         public bool DebugMode { get; private set; }
         public int MaxRecursions { get; private set; }
