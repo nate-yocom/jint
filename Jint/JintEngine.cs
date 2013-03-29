@@ -213,6 +213,11 @@ namespace Jint {
             }
 
             try {
+                if (DebugMode)
+                {
+                    if (!Start(this, program))
+                        return null;
+                }
                 Visitor.Visit(program);
             }
             catch (SecurityException) {
@@ -263,8 +268,9 @@ namespace Jint {
 
                 throw new JintException(e.Message + source + stackTrace, e);
             }
-            finally {
-                Visitor.Step -= OnStep;
+            finally
+            {
+                Visitor.Step = null;
             }
 
             return Visitor.Result == null ? null : unwrap ? Visitor.Global.Marshaller.MarshalJsValue<object>( Visitor.Result) : Visitor.Result;
@@ -274,6 +280,7 @@ namespace Jint {
 
         public System.Func<JintEngine, DebugInformation, bool> Step;
         public System.Func<JintEngine, DebugInformation, bool> Break;
+        protected System.Func<JintEngine, Program, bool> Start;
         public List<BreakPoint> BreakPoints { get; private set; }
         public bool DebugMode { get; private set; }
         public int MaxRecursions { get; private set; }
